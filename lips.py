@@ -71,6 +71,10 @@ def my_eval(code, fenv, venv):
         v1 = my_eval(code[1], fenv, venv)
         v2 = my_eval(code[2], fenv, venv)
         return v1 - v2
+    elif op == '+':
+        v1 = my_eval(code[1], fenv, venv)
+        v2 = my_eval(code[2], fenv, venv)
+        return v1 + v2    
     elif op == 'func':
         fname = code[1]
         fenv[fname] = {
@@ -113,5 +117,14 @@ def my_eval(code, fenv, venv):
     raise Exception("Invalid Name {}".format(op))
 
 if __name__ == '__main__':
-    my_eval(script2, {}, {})
+    fenv = {}
+    venv = {}
+    
+    while True:
+        script = input("(Lips)>> ")
+        try:
+            my_eval(eval(script), fenv, venv)
+        except Exception as e:
+            print("!!!EXCEPTION!!!")
+            print(e)
     
