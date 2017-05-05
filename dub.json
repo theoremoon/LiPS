@@ -1,0 +1,9 @@
+{
+	"name": "lips",
+	"authors": [
+		"theoldmoon0602"
+	],
+	"description": "Lips is a Lisp Like Language",
+	"copyright": "Copyright © 2017, theoldmoon0602",
+	"license": "Apache-2.0"
+}
