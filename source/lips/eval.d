@@ -1,27 +1,37 @@
-import ASTItems, types;
+import ASTItems;
 
-import std.stdio,
- std.traits;
+import std.stdio;
 
-ASTNode eval(ASTNode node)
+ASTNode call(ASTFunc func, Env env, ASTNode[] args)
 {
-    if (node.type == NodeType.node)
+    if (auto builtin = cast(ASTBuiltin)func)
     {
-        // function
+        return builtin.eval(env, args);
+    }
+    return eval(func.proc, env);
+}
+
+ASTNode eval(ASTNode node, Env env)
+{
+    if (node.type == NodeType.list)
+    {
         if (node.op is null)
         {
-            throw new Exception("empty list is not valid");
+            return node; // false
         }
         if (auto op = cast(ASTIdentifier)node.op) {
-            if (op.name == "print")
-            {
-                writeln(eval(node.args[0]));
+            if (! (op.name in env)) {
+                throw new Exception("unknown function:" ~ op.name);
+            }
+            if (auto func = cast(ASTFunc)env[op.name]) {
+                return call(func, env, node.args);
             }
         }
-        else {
-            throw new Exception("function must be symbol");
+        else if (node.args.length == 0) {
+            return eval(node.op, env);
         }
-        return null;
+
+        throw new Exception("only function simbol can have arguments");
     }
     else if (auto integer = cast(ASTInteger)node)
     {

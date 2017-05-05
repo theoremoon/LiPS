@@ -6,7 +6,8 @@ enum NodeType
     identifier,
     integer,
     string,
-    node
+    list,
+    func
 
 }
 
@@ -20,12 +21,12 @@ class ASTNode
 
     this()
     {
-        this.type = NodeType.node;
+        this.type = NodeType.list;
         this.op = null;
         this.args = [];
     }
     this(ASTNode op, ASTNode[] args) {
-        this.type  = NodeType.node;
+        this.type  = NodeType.list;
         this.op = op;
         this.args = args;
     }
@@ -90,5 +91,36 @@ class ASTString : ASTNode
     override string toString()
     {
         return value;
+    }
+}
+
+class ASTFunc : ASTNode
+{
+    public {
+        string name;
+        string[] params;
+        ASTNode proc;
+    }
+    this(string name, string[] params, ASTNode proc) {
+        super();
+        this.type = NodeType.func;
+        this.name = name;
+        this.params = params;
+        this.proc = proc;
+    }
+}
+alias Env = ASTNode[string];
+alias BuiltinFunc = ASTNode function(ASTNode[] args, Env env);
+class ASTBuiltin : ASTFunc
+{
+    public {
+         BuiltinFunc func;
+    }
+    this(string name, BuiltinFunc func) {
+        super(name, [], null);
+        this.func = func;
+    }
+    ASTNode eval(Env env, ASTNode[] args) {
+        return func(args, env);
     }
 }
