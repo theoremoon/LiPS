@@ -7,8 +7,9 @@ void main()
 	Env env;
 
 	env["print"] = new ASTBuiltin("print", &builtin_print);
+	env["+"] = new ASTBuiltin("+", &builtin_add);
 
-	string src = `(print 'hello world')`;
+	string src = `(print (+ 1 2))`;
 	// string src = `(do (print 'HELLO WOLRD') (print 'GOOD BYE'))`;
 	// string src = `(do
 	// 	(func factorial (n) (
