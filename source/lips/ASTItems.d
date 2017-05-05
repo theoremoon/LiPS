@@ -73,7 +73,7 @@ class ASTInteger : ASTNode
 
     override string toString()
     {
-        return "int:"~value.to!string;
+        return value.to!string;
     }
 }
 
@@ -89,6 +89,6 @@ class ASTString : ASTNode
     }
     override string toString()
     {
-        return "str:"~value;
+        return value;
     }
 }
