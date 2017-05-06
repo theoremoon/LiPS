@@ -13,7 +13,7 @@ ASTNode builtin_do(ASTNode[] args, ref Env env) {
     Env newenv = env.dup;
     ASTNode result;
     foreach (exp; args) {
-        result = eval.eval(exp, env);
+        result = eval.eval(exp, newenv);
     }
     return result;
 }
