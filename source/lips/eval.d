@@ -2,7 +2,7 @@ import ASTItems;
 
 import std.stdio;
 
-ASTNode call(ASTFunc func, Env env, ASTNode[] args)
+ASTNode call(ASTFunc func, ref Env env, ASTNode[] args)
 {
     if (auto builtin = cast(ASTBuiltin)func)
     {
@@ -11,7 +11,7 @@ ASTNode call(ASTFunc func, Env env, ASTNode[] args)
     return eval(func.proc, env);
 }
 
-ASTNode eval(ASTNode node, Env env)
+ASTNode eval(ASTNode node, ref Env env)
 {
     if (node.type == NodeType.list)
     {
