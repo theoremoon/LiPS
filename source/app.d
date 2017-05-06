@@ -30,7 +30,7 @@ void main()
 		`(if () (print 'true') (print 'false'))`,
 		`(do (print 'HELLO WOLRD') (print 'GOOD BYE'))`,
 		`(do (def v 1) (print v))`,
-		`(do (func f (arg1 arg2) (print 1)) (f 1 2))`,
+		`(do (func f (arg1 arg2) (print arg1)) (f 2 1))`,
 	];
 	// string src = `(do
 	// 	(func factorial (n) (
