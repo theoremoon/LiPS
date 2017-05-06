@@ -1,3 +1,5 @@
+/// 組み込み関数
+
 import ASTItems, eval, util;
 
 import std.stdio, std.conv;

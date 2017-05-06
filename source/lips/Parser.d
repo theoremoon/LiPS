@@ -18,14 +18,14 @@ class Parser
         this.src = src;
     }
 
+    /// parseImpl のラッパ
     ASTNode parse() {
-        p++;
+        p++; // ( を読み飛ばす
         return parseImpl();
     }
 
     ASTNode parseImpl()
     {
-
         ASTNode[] nodes;
         while (true)
         {
@@ -39,7 +39,6 @@ class Parser
                 p++;
               
                 return new ASTNode(nodes);
-           
             case TokenType.string:
                 nodes ~= new ASTString(src[p].value);
                 p++;
@@ -54,11 +53,10 @@ class Parser
                 break;
             }
         }
-
-        // throw new Exception("INVALID");
     }
 }
 
+/// Parserにつっこんで parseするだけ
 ASTNode parse(Token[] src)
 {
     auto parser = new Parser(src);

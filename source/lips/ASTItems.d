@@ -1,6 +1,8 @@
-
+// 構文木のパーツになるクラス
 import std.conv;
 
+
+/// はいはいenum enum
 enum NodeType
 {
     identifier,
@@ -11,6 +13,7 @@ enum NodeType
 
 }
 
+/// 基本クラス。リストにもなるらしい
 class ASTNode
 {    
     public {
@@ -18,16 +21,15 @@ class ASTNode
         ASTNode[] elements;
     }
 
-    this()
-    {
-        this.type = NodeType.list;
-        this.elements = [];
+    this() {
+        this([]);
     }
     this(ASTNode[] elements) {
         this.type  = NodeType.list;
         this.elements = elements;
     }
 
+    // toString では普通に木を吐く
     override string toString() {
         string s = "(";
 
@@ -40,6 +42,7 @@ class ASTNode
     }
 }
 
+/// 識別子。Symbolともいう
 class ASTIdentifier : ASTNode
 {
     public {
@@ -58,6 +61,7 @@ class ASTIdentifier : ASTNode
     }
 }
 
+/// Integer
 class ASTInteger : ASTNode
 {
     public {
@@ -75,6 +79,7 @@ class ASTInteger : ASTNode
     }
 }
 
+/// String
 class ASTString : ASTNode
 {
     public {
@@ -91,11 +96,13 @@ class ASTString : ASTNode
     }
 }
 
+
+/// 関数関数
 class ASTFunc : ASTNode
 {
     public {
-        string[] params;
-        ASTNode proc;
+        string[] params; /// 仮引数
+        ASTNode proc; /// 本体（bodyが予約後だったぽい？
     }
     this(string[] params, ASTNode proc) {
         super();
@@ -104,8 +111,14 @@ class ASTFunc : ASTNode
         this.proc = proc;
     }
 }
+
+/// 環境
 alias Env = ASTNode[string];
+
+/// 組み込み関数の型
 alias BuiltinFunc = ASTNode function(ASTNode[] elements, ref Env env);
+
+/// 組み込み関数
 class ASTBuiltin : ASTFunc
 {
     public {

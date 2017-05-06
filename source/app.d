@@ -2,11 +2,14 @@ import Lexer, Parser, eval, ASTItems, builtinfuncs;
 import std.stdio;
 
 
+/// Lips ソースコードを実行する
 void execute(string src) {
 	writeln("\n== EXECUTE ==");
 
+	// 環境をつくって
 	Env env;
 
+	// ビルトイン関数を与える
 	env["print"] = new ASTBuiltin(&builtin_print);
 	env["+"] = new ASTBuiltin(&builtin_add);
 	env["*"] = new ASTBuiltin(&builtin_multiply);
@@ -17,10 +20,9 @@ void execute(string src) {
 	env["func"] = new ASTBuiltin(&builtin_func);
 	env["="] = new ASTBuiltin(&builtin_eq);
 
+	// 字句解析して構文解析して評価する
 	auto it = lex(src);
-	// writeln(it);
 	auto ast = parse(it);
-	// writeln(ast);
 	eval.eval(ast, env);
 }
 
