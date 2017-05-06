@@ -8,7 +8,30 @@ ASTNode builtin_print(ASTNode[] args, ref Env env) {
 
     return v;
 }
+ASTNode builtin_def(ASTNode[] args, ref Env env) {
+    if (auto name = cast(ASTIdentifier)args[0]) {
+        auto value = eval.eval(args[1], env);
+        env[name.name] = value;
+        return value;
+    }
+    throw new Exception("ERROR");
+}
+ASTNode builtin_func(ASTNode[]args, ref Env env) {
+    if (auto name = cast(ASTIdentifier)args[0]) {
+        string[] params;
+        foreach (arg; args[1].op ~ args[1].args) {
+            if (auto param = cast(ASTIdentifier)arg) {
+                params ~= param.name;
+            }
+            else {
+                throw new Exception("function parameter " ~ arg.toString ~ " is not a symbol");
+            }
+        }
 
+        return new ASTFunc(name.name, params, args[2]);
+    }
+    throw new Exception("error");
+}
 ASTNode builtin_do(ASTNode[] args, ref Env env) {
     Env newenv = env.dup;
     ASTNode result;

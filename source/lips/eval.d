@@ -42,7 +42,10 @@ ASTNode eval(ASTNode node, ref Env env)
         return str;
     }
     else if (auto identifier = cast(ASTIdentifier)node) {
-        return identifier;
+        if (! (identifier.name in env)) {
+            throw new Exception("unkown symbol " ~ identifier.toString);
+        }
+        return env[identifier.name];
     }
     
     throw new Exception("Unknown Type Node " ~ node.toString);
