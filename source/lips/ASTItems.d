@@ -117,7 +117,7 @@ class ASTBuiltin : ASTFunc
         super(name, [], null);
         this.func = func;
     }
-    ASTNode eval(Env env, ASTNode[] elements) {
+    ASTNode eval(ref Env env, ASTNode[] elements) {
         return func(elements, env);
     }
 }

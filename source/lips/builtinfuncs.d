@@ -62,7 +62,7 @@ ASTNode builtin_if(ASTNode[] args, ref Env env) {
 ASTNode builtin_add(ASTNode[] args, ref Env env) {
     int retval = 0;
     foreach (arg; args) {
-        if (auto intval = cast(ASTInteger)arg) {
+        if (auto intval = cast(ASTInteger)eval.eval(arg, env)) {
             retval += intval.value;
         }
         else {
@@ -72,23 +72,26 @@ ASTNode builtin_add(ASTNode[] args, ref Env env) {
     return new ASTInteger(retval);
 }
 
-ASTNode builtin_subtract(ASTNode[] args, ref Env env) {
-    int retval = 0;
-    foreach (arg; args) {
-        if (auto intval = cast(ASTInteger)arg) {
-            retval -= intval.value;
+ASTNode builtin_sub(ASTNode[] args, ref Env env) {
+    if (auto initval = cast(ASTInteger)eval.eval(args[0], env)) {
+        int retval = initval.value;        
+        foreach (arg; args[1..$]) {
+            if (auto intval = cast(ASTInteger)eval.eval(arg, env)) {
+                retval -= intval.value;
+            }
+            else {
+                throw new Exception("expected int but given is " ~ arg.toString);
+            }
         }
-        else {
-            throw new Exception("expected int but given is " ~ arg.toString);
-        }
+        return new ASTInteger(retval);
     }
-    return new ASTInteger(retval);
+    throw new Exception("invalid arugments " ~ args[0].toString);
 }
 
 ASTNode builtin_multiply(ASTNode[] args, ref Env env) {
     int retval = 1;
     foreach (arg; args) {
-        if (auto intval = cast(ASTInteger)arg) {
+        if (auto intval = cast(ASTInteger)eval.eval(arg, env)) {
             retval *= intval.value;
         }
         else {
@@ -96,4 +99,17 @@ ASTNode builtin_multiply(ASTNode[] args, ref Env env) {
         }
     }
     return new ASTInteger(retval);
+}
+ASTNode builtin_eq(ASTNode[] args, ref Env env) {
+    ASTNode v1 = eval.eval(args[0], env);
+    ASTNode v2 = eval.eval(args[1], env);
+    if (auto v3 = cast(ASTInteger)v1) {
+        if (auto v4 = cast(ASTInteger)v2) {
+            if (v3.value == v4.value) {
+                return new ASTInteger(1);
+            }
+            return new ASTNode([]);
+        }
+    }
+    throw new Exception("ERR " ~ v1.toString ~ " " ~ v2.toString);
 }

@@ -14,7 +14,7 @@ ASTNode call(ASTFunc func, ref Env env, ASTNode[] args)
     //  環境をつくり、そこに引数を加えて、中身をevalする
     Env funcenv = env.dup;
     for (int i = 0; i < func.params.length; i++) {
-        funcenv[func.params[i]] = args[i];
+        funcenv[func.params[i]] = eval(args[i], env);
     }
     return eval(func.proc, funcenv);
 }
