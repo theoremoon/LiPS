@@ -19,7 +19,7 @@ ASTNode builtin_def(ASTNode[] args, ref Env env) {
 ASTNode builtin_func(ASTNode[]args, ref Env env) {
     if (auto name = cast(ASTIdentifier)args[0]) {
         string[] params;
-        foreach (arg; args[1].op ~ args[1].args) {
+        foreach (arg; args[1].elements) {
             if (auto param = cast(ASTIdentifier)arg) {
                 params ~= param.name;
             }

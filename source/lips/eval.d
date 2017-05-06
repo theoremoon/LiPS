@@ -15,20 +15,20 @@ ASTNode eval(ASTNode node, ref Env env)
 {
     if (node.type == NodeType.list)
     {
-        if (node.op is null)
+        if (node.elements.length == 0)
         {
             return node; // false
         }
-        if (auto op = cast(ASTIdentifier)node.op) {
+        if (auto op = cast(ASTIdentifier)node.elements[0]) {
             if (! (op.name in env)) {
                 throw new Exception("unknown function:" ~ op.name);
             }
             if (auto func = cast(ASTFunc)env[op.name]) {
-                return call(func, env, node.args);
+                return call(func, env, node.elements[1..$]);
             }
         }
-        else if (node.args.length == 0) {
-            return eval(node.op, env);
+        else if (node.elements.length == 1) {
+            return eval(node.elements[0], env);
         }
 
         throw new Exception("only function simbol can have arguments");

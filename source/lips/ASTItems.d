@@ -15,27 +15,24 @@ class ASTNode
 {    
     public {
         NodeType type;
-        ASTNode op;
-        ASTNode[] args;
+        ASTNode[] elements;
     }
 
     this()
     {
         this.type = NodeType.list;
-        this.op = null;
-        this.args = [];
+        this.elements = [];
     }
-    this(ASTNode op, ASTNode[] args) {
+    this(ASTNode[] elements) {
         this.type  = NodeType.list;
-        this.op = op;
-        this.args = args;
+        this.elements = elements;
     }
 
     override string toString() {
-        string s = "(" ~ op.toString;
+        string s = "(";
 
-        foreach (arg; args) {
-            s = s ~ " " ~ arg.toString;
+        foreach (e; elements) {
+            s = s ~ " " ~ e.toString;
         }
         s ~= ")";
 
@@ -110,7 +107,7 @@ class ASTFunc : ASTNode
     }
 }
 alias Env = ASTNode[string];
-alias BuiltinFunc = ASTNode function(ASTNode[] args, ref Env env);
+alias BuiltinFunc = ASTNode function(ASTNode[] elements, ref Env env);
 class ASTBuiltin : ASTFunc
 {
     public {
@@ -120,7 +117,7 @@ class ASTBuiltin : ASTFunc
         super(name, [], null);
         this.func = func;
     }
-    ASTNode eval(Env env, ASTNode[] args) {
-        return func(args, env);
+    ASTNode eval(Env env, ASTNode[] elements) {
+        return func(elements, env);
     }
 }

@@ -37,14 +37,8 @@ class Parser
                 break;
             case TokenType.close:
                 p++;
-                if (nodes.length == 0) {
-                    return new ASTNode();
-                }
-                else if (nodes.length == 1) {
-                    return new ASTNode(nodes[0], []);
-                }
-
-                return new ASTNode(nodes[0], nodes[1..$]);
+              
+                return new ASTNode(nodes);
            
             case TokenType.string:
                 nodes ~= new ASTString(src[p].value);
