@@ -27,19 +27,16 @@ ASTNode eval(ASTNode node, ref Env env)
         {
             return node; // false
         }
-        if (auto op = cast(ASTIdentifier)node.elements[0]) {
-            if (! (op.name in env)) {
-                throw new Exception("unknown function:" ~ op.name);
-            }
-            if (auto func = cast(ASTFunc)env[op.name]) {
-                return call(func, env, node.elements[1..$]);
-            }
+
+        ASTNode val = eval(node.elements[0], env);
+        if (auto func = cast(ASTFunc)val) {
+            return call(func, env, node.elements[1..$]);
         }
         else if (node.elements.length == 1) {
             return eval(node.elements[0], env);
         }
 
-        throw new Exception("only function simbol can have arguments");
+        throw new Exception("only function can have arguments");
     }
     else if (auto integer = cast(ASTInteger)node)
     {

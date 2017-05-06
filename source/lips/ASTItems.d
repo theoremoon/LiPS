@@ -94,14 +94,12 @@ class ASTString : ASTNode
 class ASTFunc : ASTNode
 {
     public {
-        string name;
         string[] params;
         ASTNode proc;
     }
-    this(string name, string[] params, ASTNode proc) {
+    this(string[] params, ASTNode proc) {
         super();
         this.type = NodeType.func;
-        this.name = name;
         this.params = params;
         this.proc = proc;
     }
@@ -113,8 +111,8 @@ class ASTBuiltin : ASTFunc
     public {
          BuiltinFunc func;
     }
-    this(string name, BuiltinFunc func) {
-        super(name, [], null);
+    this(BuiltinFunc func) {
+        super([], null);
         this.func = func;
     }
     ASTNode eval(ref Env env, ASTNode[] elements) {

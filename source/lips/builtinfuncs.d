@@ -17,22 +17,18 @@ ASTNode builtin_def(ASTNode[] args, ref Env env) {
     throw new Exception("ERROR");
 }
 ASTNode builtin_func(ASTNode[]args, ref Env env) {
-    if (auto name = cast(ASTIdentifier)args[0]) {
-        string[] params;
-        foreach (arg; args[1].elements) {
-            if (auto param = cast(ASTIdentifier)arg) {
-                params ~= param.name;
-            }
-            else {
-                throw new Exception("function parameter " ~ arg.toString ~ " is not a symbol");
-            }
+    string[] params;
+    foreach (arg; args[0].elements) {
+        if (auto param = cast(ASTIdentifier)arg) {
+            params ~= param.name;
         }
-
-        ASTFunc f = new ASTFunc(name.name, params, args[2]);
-        env[name.name] = f;
-        return f;
+        else {
+            throw new Exception("function parameter " ~ arg.toString ~ " is not a symbol");
+        }
     }
-    throw new Exception("error");
+
+    ASTFunc f = new ASTFunc(params, args[1]);
+    return f;
 }
 ASTNode builtin_do(ASTNode[] args, ref Env env) {
     Env newenv = env.dup;
