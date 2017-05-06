@@ -14,6 +14,9 @@ Token[] lex(string src)
         {
             p++;
         }
+        if (p >= src.length) {
+            break;
+        }
 
         if (src[p].isdigit)
         {
