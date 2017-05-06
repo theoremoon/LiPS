@@ -28,7 +28,9 @@ ASTNode builtin_func(ASTNode[]args, ref Env env) {
             }
         }
 
-        return new ASTFunc(name.name, params, args[2]);
+        ASTFunc f = new ASTFunc(name.name, params, args[2]);
+        env[name.name] = f;
+        return f;
     }
     throw new Exception("error");
 }

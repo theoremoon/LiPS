@@ -4,11 +4,19 @@ import std.stdio;
 
 ASTNode call(ASTFunc func, ref Env env, ASTNode[] args)
 {
+    // 組み込み関数
     if (auto builtin = cast(ASTBuiltin)func)
     {
         return builtin.eval(env, args);
     }
-    return eval(func.proc, env);
+
+    // ユーザ定義関数
+    //  環境をつくり、そこに引数を加えて、中身をevalする
+    Env funcenv = env.dup;
+    for (int i = 0; i < func.params.length; i++) {
+        funcenv[func.params[i]] = args[i];
+    }
+    return eval(func.proc, funcenv);
 }
 
 ASTNode eval(ASTNode node, ref Env env)
@@ -47,6 +55,6 @@ ASTNode eval(ASTNode node, ref Env env)
         }
         return env[identifier.name];
     }
-    
+
     throw new Exception("Unknown Type Node " ~ node.toString);
 }
