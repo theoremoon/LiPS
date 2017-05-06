@@ -9,11 +9,12 @@ void main()
 	env["print"] = new ASTBuiltin("print", &builtin_print);
 	env["+"] = new ASTBuiltin("+", &builtin_add);
 	env["if"] = new ASTBuiltin("if", &builtin_if);
+	env["do"] = new ASTBuiltin("do", &builtin_do);
 
 	string src = `(print (+ 1 2 2 'str'))`;
 	src = `(if () (print 'true') (print 'false'))
 	`;
-	// string src = `(do (print 'HELLO WOLRD') (print 'GOOD BYE'))`;
+	src = `(do (print 'HELLO WOLRD') (print 'GOOD BYE'))`;
 	// string src = `(do
 	// 	(func factorial (n) (
 	// 		(if (= n 1)

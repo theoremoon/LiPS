@@ -9,6 +9,15 @@ ASTNode builtin_print(ASTNode[] args, Env env) {
     return v;
 }
 
+ASTNode builtin_do(ASTNode[] args, Env env) {
+    Env newenv = env.dup;
+    ASTNode result;
+    foreach (exp; args) {
+        result = eval.eval(exp, env);
+    }
+    return result;
+}
+
 ASTNode builtin_if(ASTNode[] args, Env env) {
     if (args.length != 3) {
         throw new Exception("the if function have excatly 3 arguments but " ~ args.length.to!string ~ " given");
