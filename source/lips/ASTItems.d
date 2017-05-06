@@ -110,7 +110,7 @@ class ASTFunc : ASTNode
     }
 }
 alias Env = ASTNode[string];
-alias BuiltinFunc = ASTNode function(ASTNode[] args, Env env);
+alias BuiltinFunc = ASTNode function(ASTNode[] args, ref Env env);
 class ASTBuiltin : ASTFunc
 {
     public {
