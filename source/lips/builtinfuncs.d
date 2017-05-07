@@ -40,6 +40,13 @@ ASTNode builtin_do(ASTNode[] args, ref Env env) {
     }
     return result;
 }
+ASTNode builtin_list(ASTNode[] args, ref Env env) {
+    ASTNode[] elements;
+    foreach (arg; args) {
+        elements ~= eval.eval(arg, env);
+    }
+    return new ASTNode(elements);
+}
 
 ASTNode builtin_if(ASTNode[] args, ref Env env) {
     if (args.length != 3) {

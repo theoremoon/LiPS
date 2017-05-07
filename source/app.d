@@ -19,6 +19,7 @@ void execute(string src) {
 	env["def"] = new ASTBuiltin(&builtin_def);
 	env["func"] = new ASTBuiltin(&builtin_func);
 	env["="] = new ASTBuiltin(&builtin_eq);
+	env["list"] = new ASTBuiltin(&builtin_list);
 
 	// 字句解析して構文解析して評価する
 	auto it = lex(src);
@@ -46,7 +47,8 @@ void main()
 					(* n (factorial (- n 1))))))
 			(print (factorial 4))
 			(print (factorial 1))
-			(print (factorial 10)))`
+			(print (factorial 10)))`,
+		`(print (list 1 2 3))`
 	];
 			
 	foreach (src; srcs) {
