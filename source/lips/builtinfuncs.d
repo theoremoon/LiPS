@@ -18,6 +18,19 @@ ASTNode builtin_def(ASTNode[] args, ref Env env) {
     }
     throw new Exception("ERROR");
 }
+ASTNode builtin_macro(ASTNode[] args, ref Env env) {
+    string[] params;
+    foreach (arg; args[0].elements) {
+        if (auto param = cast(ASTIdentifier)arg) {
+            params ~= param.name;
+        }
+        else {
+            throw new Exception("macro parameter " ~ arg.toString ~ " is not a symbol");
+        }
+    }
+    ASTMacro astmacro = new ASTMacro(params, args[1]);
+    return astmacro;
+}
 ASTNode builtin_func(ASTNode[]args, ref Env env) {
     string[] params;
     foreach (arg; args[0].elements) {
@@ -39,6 +52,9 @@ ASTNode builtin_do(ASTNode[] args, ref Env env) {
         result = eval.eval(exp, newenv);
     }
     return result;
+}
+ASTNode builtin_quote(ASTNode[] args, ref Env env) {
+    return args[0];
 }
 ASTNode builtin_list(ASTNode[] args, ref Env env) {
     ASTNode[] elements;

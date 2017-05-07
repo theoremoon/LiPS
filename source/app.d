@@ -19,8 +19,10 @@ void execute(string src) {
 	env["def"] = new ASTBuiltin(&builtin_def);
 	env["func"] = new ASTBuiltin(&builtin_func);
 	env["="] = new ASTBuiltin(&builtin_eq);
+	env["quote"] = new ASTBuiltin(&builtin_quote);
 	env["list"] = new ASTBuiltin(&builtin_list);
 	env["nth"] = new ASTBuiltin(&builtin_nth);
+	env["macro"] = new ASTBuiltin(&builtin_macro);
 
 	// 字句解析して構文解析して評価する
 	auto it = lex(src);
@@ -49,10 +51,18 @@ void main()
 			(print (factorial 4))
 			(print (factorial 1))
 			(print (factorial 10)))`,
-		`(print (list 1 2 3))`,
-		`(print (nth 1 (list 1 2 3)))`
+		`(print (nth 1 (list 1 2 3)))`,
+		`((quote (print 1)))`,
+		`(print (quote (1 2)))`,
+		`(print ((list (quote list) 2 3)))`,
+		`(do
+			(def swap (macro (a b)
+				(list (quote list) b a)))
+			(print (swap (quote (quote 1)) 2))
+		)`
+		
 	];
-			
+
 	foreach (src; srcs) {
 		execute(src);
 	}

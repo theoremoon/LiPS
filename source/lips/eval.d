@@ -12,6 +12,15 @@ ASTNode call(ASTFunc func, ref Env env, ASTNode[] args)
         return builtin.eval(env, args);
     }
 
+    // マクロ
+    if (auto lipsmacro = cast(ASTMacro)func) {
+        Env macroenv = env.dup;
+        for (int i = 0; i < func.params.length; i++) {
+            macroenv[func.params[i]] = args[i];
+        }
+        return eval(eval(lipsmacro.proc, macroenv), env);
+    }
+
     // ユーザ定義関数
     //  環境をつくり、そこに引数を加えて、procをevalする
     Env funcenv = env.dup;
@@ -37,12 +46,16 @@ ASTNode eval(ASTNode node, ref Env env)
         if (auto func = cast(ASTFunc)val) {
             return call(func, env, node.elements[1..$]);
         }
+        
         // 関数以外 (x)
         else if (node.elements.length == 1) {
-            return eval(node.elements[0], env);
+            if (val.type == NodeType.list) {
+                return eval(val, env);
+            }
+            return val;
         }
 
-        throw new Exception("only function can have arguments");
+        throw new Exception("only function can have arguments " ~ node.toString);
     }
     else if (auto integer = cast(ASTInteger)node)
     {

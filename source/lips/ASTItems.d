@@ -9,7 +9,8 @@ enum NodeType
     integer,
     string,
     list,
-    func
+    func,
+    lipsmacro,
 
 }
 
@@ -109,6 +110,13 @@ class ASTFunc : ASTNode
         this.type = NodeType.func;
         this.params = params;
         this.proc = proc;
+    }
+}
+
+class ASTMacro : ASTFunc {
+    this(string[] params, ASTNode proc) {
+        super(params, proc);
+        this.type = NodeType.lipsmacro;
     }
 }
 
