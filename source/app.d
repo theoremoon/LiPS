@@ -59,6 +59,11 @@ void main()
 			(def swap (macro (a b)
 				(list (quote list) b a)))
 			(print (swap (quote (quote 1)) 2))
+		)`,
+		`(do
+			(def unless (macro (cond when-true when-false) (
+				(if cond when-false when-true) )))
+			(print (unless 1 (quote (quote 'true')) (quote (quote 'false') ))))
 		)`
 		
 	];
