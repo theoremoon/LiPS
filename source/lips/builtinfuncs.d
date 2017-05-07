@@ -40,7 +40,20 @@ ASTNode builtin_do(ASTNode[] args, ref Env env) {
     }
     return result;
 }
-
+ASTNode builtin_list(ASTNode[] args, ref Env env) {
+    ASTNode[] elements;
+    foreach (arg; args) {
+        elements ~= eval.eval(arg, env);
+    }
+    return new ASTNode(elements);
+}
+ASTNode builtin_nth(ASTNode[] args, ref Env env) {
+    if (auto nth = cast(ASTInteger)eval.eval(args[0], env)) {
+        auto list = eval.eval(args[1], env);
+        return eval.eval(list.elements[nth.value], env);
+    }
+    throw new Exception("first argument must be int value");
+}
 ASTNode builtin_if(ASTNode[] args, ref Env env) {
     if (args.length != 3) {
         throw new Exception("the if function have excatly 3 arguments but " ~ args.length.to!string ~ " given");

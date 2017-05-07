@@ -27,7 +27,7 @@ Token[] lex(string src)
             {
                 p2++;
             }
-            p2--;　// [p..p2]は既にnumericではないのでこうする
+            p2--; // [p..p2]は既にnumericではないのでこうする
 
             tokens ~= new Token(TokenType.integer, src[p .. p2]);
             p = p2;
