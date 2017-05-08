@@ -18,41 +18,55 @@ class Parser
         this.src = src;
     }
 
-    /// parseImpl のラッパ
+    /// parseOne のラッパ
     ASTNode parse() {
-        p++; // ( を読み飛ばす
-        return parseImpl();
+        return parseOne();
     }
 
-    ASTNode parseImpl()
-    {
+    ASTNode parseParen() {
         ASTNode[] nodes;
-        while (true)
-        {
-            final switch (src[p].type)
-            {
-            case TokenType.open:
-                p++;
-                nodes ~= parseImpl();
-                break;
-            case TokenType.close:
-                p++;
-              
-                return new ASTNode(nodes);
-            case TokenType.string:
-                nodes ~= new ASTString(src[p].value);
-                p++;
-                break;
-            case TokenType.integer:
-                nodes ~= new ASTInteger(src[p].value.to!int);
-                p++;
-                break;
-            case TokenType.identifier:
-                nodes ~= new ASTIdentifier(src[p].value);
+        while (p < src.length) {
+            if (src[p].type == TokenType.close) {
                 p++;
                 break;
             }
+            nodes ~= parseOne();
         }
+
+        return new ASTNode(nodes);
+    }
+
+    ASTNode parseOne() {
+        ASTNode node;
+        final switch (src[p].type)
+        {
+            case TokenType.open:
+                p++;
+                node = parseParen();
+                break;
+            case TokenType.close:
+                throw new Exception(") appears. too many");
+            case TokenType.string:
+                node = new ASTString(src[p].value);
+                p++;
+                break;
+            case TokenType.integer:
+                node = new ASTInteger(src[p].value.to!int);
+                p++;
+                break;
+            case TokenType.identifier:
+                node = new ASTIdentifier(src[p].value);
+                p++;
+                break;
+            case TokenType.quote:
+                ASTNode[] quote;
+                quote ~= new ASTIdentifier("quote");
+                p++;
+                quote ~= parseOne();
+                node = new ASTNode(quote);
+                break;
+        }
+        return node;
     }
 }
 

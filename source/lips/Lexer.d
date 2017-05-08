@@ -15,12 +15,8 @@ class Lexer
         this.p = 0;
     }
 
-    bool next() {
-        return p < src.length;
-    }
-
     void skip(){
-        while (next && src[p].isspace)
+        while (p < src.length && src[p].isspace)
         {
             p++;
         }
@@ -34,7 +30,7 @@ class Lexer
         }
     
         int p2 = p + 1;
-        while (next && src[p .. p2].isNumeric)
+        while (p2<=src.length && src[p .. p2].isNumeric)
         {
             p2++;
         }
@@ -53,7 +49,7 @@ class Lexer
         }
         p++;
         int p2 = p + 1;
-        while (next && src[p2] != '"')
+        while (p2<src.length && src[p2] != '"')
         {
             p2++;
         }
@@ -75,6 +71,11 @@ class Lexer
             p++;
             return new Token(TokenType.close, ")");
         }
+        else if (src[p]== '\'') 
+        {
+            p++;
+            return new Token(TokenType.quote, "'");
+        }
 
         return null;
     }
@@ -82,7 +83,7 @@ class Lexer
     Token lexIdentifier() {
         int p2 = p + 1;
         // 空白とか区切り文字が来るまで読み続けちゃえ
-        while (p2 < src.length && !src[p2].isspace && !"()'".canFind(src[p2]))
+        while (p2<src.length && !src[p2].isspace && !"()'\"".canFind(src[p2]))
         {
             p2++;
         }
@@ -94,7 +95,7 @@ class Lexer
     Token lexOne()
     {
         skip();
-        if (!next) {
+        if (p >= src.length) {
             return null;
         }
         auto token = lexInt();

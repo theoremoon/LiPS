@@ -6,6 +6,7 @@ enum TokenType
     string,
     open,
     close,
+    quote,
     identifier,
 }
 
