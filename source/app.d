@@ -36,8 +36,8 @@ void main()
 
 	string[] srcs = [
 		`(print (+ 1 2 2))`,
-		`(if () (print 'true') (print 'false'))`,
-		`(do (print 'HELLO WOLRD') (print 'GOOD BYE'))`,
+		`(if () (print "true") (print "false"))`,
+		`(do (print "HELLO") (print "WORLD"))`,
 		`(do (def v 1) (print v))`,
 		`(do (def f (func (arg1 arg2) (print arg1))) (f 2 1))`,
 		`(do (def f (func (arg1) (+ 1 arg1))) (print (f 3)))`,
@@ -63,7 +63,7 @@ void main()
 		`(do
 			(def unless (macro (cond when-true when-false) (
 				(if cond when-false when-true) )))
-			(print (unless 1 (quote (quote 'true')) (quote (quote 'false') ))))
+			(print (unless 1 (quote (quote "true")) (quote (quote "false") ))))
 		)`
 		
 	];

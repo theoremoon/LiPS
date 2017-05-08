@@ -33,17 +33,17 @@ Token[] lex(string src)
             p = p2;
         }
         // 文字列
-        else if (src[p] == '\'')
+        else if (src[p] == '"')
         {
             p++;
             int p2 = p + 1;
-            while (p2 < src.length && src[p2] != '\'')
+            while (p2 < src.length && src[p2] != '"')
             {
                 p2++;
             }
-            // 最後の'は文字列ではないので、p2--とかしなくていい
+            // 最後の"は文字列ではないので、p2--とかしなくていい
             tokens ~= new Token(TokenType.string, src[p .. p2]);
-            p = p2+1; // 'を読み飛ばしてる
+            p = p2+1; // "を読み飛ばしてる
         }
         else if (src[p] == '(')
         {
