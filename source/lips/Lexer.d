@@ -3,72 +3,137 @@ import ASTItems, Token;
 
 import std.string, core.stdc.ctype, std.conv, std.algorithm;
 
-/// 字句解析するよ
-Token[] lex(string src)
+class Lexer
 {
-    Token[] tokens;
-    int p = 0;
-    while (p < src.length)
+    public {
+        string src;
+        int p = 0;
+    }
+
+    this(string src) {
+        this.src = src;
+        this.p = 0;
+    }
+
+    bool next() {
+        return p < src.length;
+    }
+
+    void skip(){
+        while (next && src[p].isspace)
+        {
+            p++;
+        }
+    }
+
+    Token lexInt()
     {
-        while (p < src.length && src[p].isspace)
-        {
-            p++;
-        }
-        // これがないと空白終わりのときに死ぬ
-        if (p >= src.length) {
-            break;
-        }
-
         // 数値を殴る
-        if (src[p].isdigit)
+        if (! src[p].isdigit) {
+            return null;
+        }
+    
+        int p2 = p + 1;
+        while (next && src[p .. p2].isNumeric)
         {
-            int p2 = p + 1;
-            while (p2 < src.length && src[p .. p2].isNumeric)
-            {
-                p2++;
-            }
-            p2--; // [p..p2]は既にnumericではないのでこうする
+            p2++;
+        }
+        p2--; // [p..p2]は既にnumericではないのでこうする
 
-            tokens ~= new Token(TokenType.integer, src[p .. p2]);
-            p = p2;
+        auto token = new Token(TokenType.integer, src[p .. p2]);
+        p = p2;
+
+        return token;
+    }
+
+    Token lexStr()
+    {
+        if (src[p] != '"') {
+            return null;
         }
-        // 文字列
-        else if (src[p] == '"')
+        p++;
+        int p2 = p + 1;
+        while (next && src[p2] != '"')
+        {
+            p2++;
+        }
+        // 最後の"は文字列ではないので、p2--とかしなくていい
+        auto token = new Token(TokenType.string, src[p .. p2]);
+        p = p2+1; // "を読み飛ばしてる
+
+        return token;
+    }
+
+    Token lexOthers() {
+        if (src[p] == '(')
         {
             p++;
-            int p2 = p + 1;
-            while (p2 < src.length && src[p2] != '"')
-            {
-                p2++;
-            }
-            // 最後の"は文字列ではないので、p2--とかしなくていい
-            tokens ~= new Token(TokenType.string, src[p .. p2]);
-            p = p2+1; // "を読み飛ばしてる
-        }
-        else if (src[p] == '(')
-        {
-            p++;
-            tokens ~= new Token(TokenType.open, "(");
+            return new Token(TokenType.open, "(");
         }
         else if (src[p] == ')')
         {
             p++;
-            tokens ~= new Token(TokenType.close, ")");
-        }
-        // 識別子
-        else
-        {
-            int p2 = p + 1;
-            // 空白とか区切り文字が来るまで読み続けちゃえ
-            while (p2 < src.length && !src[p2].isspace && !"()'".canFind(src[p2]))
-            {
-                p2++;
-            }
-            tokens ~= new Token(TokenType.identifier, src[p .. p2]);
-            p = p2;
+            return new Token(TokenType.close, ")");
         }
 
+        return null;
     }
 
-    return tokens;
+    Token lexIdentifier() {
+        int p2 = p + 1;
+        // 空白とか区切り文字が来るまで読み続けちゃえ
+        while (p2 < src.length && !src[p2].isspace && !"()'".canFind(src[p2]))
+        {
+            p2++;
+        }
+        auto token = new Token(TokenType.identifier, src[p .. p2]);
+        p = p2;
+        return token;
+    }
+
+    Token lexOne()
+    {
+        skip();
+        if (!next) {
+            return null;
+        }
+        auto token = lexInt();
+        if (token) {
+            return token;
+        }
+        token = lexStr();
+        if (token) {
+            return token;
+        }
+        token = lexOthers();
+        if (token) {
+            return token;
+        }
+        token = lexIdentifier;
+        if (token) {
+            return token;
+        }
+        return null;
+    }
+
+    Token[] lex()
+    {
+        Token[] tokens;
+        Token token;
+        while(true) {
+            token = lexOne();
+            if (token is null) {
+                break;
+            }
+            tokens ~= token;
+        }
+        return tokens;
+    }
+}
+
+/// 字句解析するよ
+Token[] lex(string src)
+{
+    Lexer lexer = new Lexer(src);
+    return lexer.lex();
 }
