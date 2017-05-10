@@ -8,6 +8,8 @@ enum TokenType
     close,
     quote,
     identifier,
+    qquote,
+    unquote,
 }
 
 class Token

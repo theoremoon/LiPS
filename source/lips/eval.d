@@ -2,6 +2,29 @@ import ASTItems;
 
 import std.stdio;
 
+/// 準クオート
+ASTNode qquote(ASTNode node, ref Env env) {
+    // リスト以外ならそのまま返していいでしょ
+    if (node.type != NodeType.list) {
+        return node;
+    }
+
+    if (auto unquote = cast(ASTIdentifier)node.elements[0]) {
+        // unquote
+        if (unquote.name == "unquote") { // 定数使ってるし負けた気がする
+            return eval(node.elements[1], env);
+        }
+    }
+
+
+    // unquoteじゃないなら中をsemiquoteしていく
+    ASTNode[] nodes;
+    foreach (element; node.elements) {
+        nodes ~= qquote(element, env);
+    }
+    return new ASTNode(nodes);
+}
+
 /// 関数呼び出し
 ASTNode call(ASTFunc func, ref Env env, ASTNode[] args)
 {

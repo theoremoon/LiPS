@@ -65,6 +65,20 @@ class Parser
                 quote ~= parseOne();
                 node = new ASTNode(quote);
                 break;
+            case TokenType.qquote:
+                ASTNode[] quote;
+                quote ~= new ASTIdentifier("qquote");
+                p++;
+                quote ~= parseOne();
+                node = new ASTNode(quote);
+                break;
+            case TokenType.unquote:
+                ASTNode[] quote;
+                quote ~= new ASTIdentifier("unquote");
+                p++;
+                quote ~= parseOne();
+                node = new ASTNode(quote);
+                break;
         }
         return node;
     }

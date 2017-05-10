@@ -56,6 +56,9 @@ ASTNode builtin_do(ASTNode[] args, ref Env env) {
 ASTNode builtin_quote(ASTNode[] args, ref Env env) {
     return args[0];
 }
+ASTNode builtin_qquote(ASTNode[] args, ref Env env) {
+    return eval.qquote(args[0], env);
+}
 ASTNode builtin_list(ASTNode[] args, ref Env env) {
     ASTNode[] elements;
     foreach (arg; args) {

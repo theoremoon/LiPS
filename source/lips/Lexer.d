@@ -76,7 +76,16 @@ class Lexer
             p++;
             return new Token(TokenType.quote, "'");
         }
-
+        else if (src[p]== '`') 
+        {
+            p++;
+            return new Token(TokenType.qquote, "`");
+        }
+        else if (src[p]== ',') 
+        {
+            p++;
+            return new Token(TokenType.unquote, ",");
+        }
         return null;
     }
 
