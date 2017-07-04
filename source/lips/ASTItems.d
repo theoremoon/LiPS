@@ -11,7 +11,6 @@ enum NodeType
     list,
     func,
     lipsmacro,
-
 }
 
 /// 基本クラス。リストにもなるらしい
@@ -37,7 +36,7 @@ class ASTNode
         foreach (e; elements) {
             s = s ~ " " ~ e.toString;
         }
-        s ~= ")";
+        s ~= " )";
 
         return s;
     }
@@ -111,12 +110,18 @@ class ASTFunc : ASTNode
         this.params = params;
         this.proc = proc;
     }
+    override string toString() {
+        return "func" ~ params.to!string;
+    }
 }
 
 class ASTMacro : ASTFunc {
     this(string[] params, ASTNode proc) {
         super(params, proc);
         this.type = NodeType.lipsmacro;
+    }
+    override string toString() {
+        return "macro" ~ params.to!string;
     }
 }
 
@@ -138,5 +143,8 @@ class ASTBuiltin : ASTFunc
     }
     ASTNode eval(ref Env env, ASTNode[] elements) {
         return func(elements, env);
+    }
+    override string toString() {
+        return "builtin";
     }
 }

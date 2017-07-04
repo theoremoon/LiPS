@@ -20,6 +20,7 @@ Env MakeEnv() {
 	env["nth"] = new ASTBuiltin(&builtin_nth);
 	env["macro"] = new ASTBuiltin(&builtin_macro);
 	env["qquote"] = new ASTBuiltin(&builtin_qquote);
+	env["type"] = new ASTBuiltin(&builtin_type);
 
 	return env;
 }

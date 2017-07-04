@@ -143,3 +143,15 @@ ASTNode builtin_eq(ASTNode[] args, ref Env env) {
     }
     throw new Exception("ERR " ~ v1.toString ~ " " ~ v2.toString);
 }
+/// それが何か返す
+ASTNode builtin_type(ASTNode[] args, ref Env env) {
+    if (args.length != 1) {
+        throw new Exception("expected 1 argument but " ~ args.length.to!string ~ " are given");
+    }
+    if (auto id = cast(ASTIdentifier)args[0]) {
+        if (id.name in env) {
+            return new ASTString(env[id.name].type.to!string);
+        }
+    }
+    return new ASTString(args[0].type.to!string);
+}

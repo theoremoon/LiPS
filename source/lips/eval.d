@@ -1,6 +1,6 @@
 import ASTItems;
 
-import std.stdio;
+import std.stdio, std.conv;
 
 /// 準クオート
 ASTNode qquote(ASTNode node, ref Env env) {
@@ -91,9 +91,16 @@ ASTNode eval(ASTNode node, ref Env env)
     // Symbol
     else if (auto identifier = cast(ASTIdentifier)node) {
         if (! (identifier.name in env)) {
-            throw new Exception("unkown symbol " ~ identifier.toString);
+            // throw new Exception("unkown symbol " ~ identifier.toString);
+            return identifier;
         }
         return env[identifier.name];
+    }
+    else if (auto func = cast(ASTFunc)node) {
+        return func;
+    }
+    else if (auto macro_ = cast(ASTMacro)node) {
+        return macro_;
     }
 
     throw new Exception("Unknown Type Node " ~ node.toString);
