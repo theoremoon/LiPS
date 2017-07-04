@@ -23,6 +23,15 @@ class Parser
         return parseOne();
     }
 
+    /// これ以上無理というところまでパースする
+    ASTNode[] parseAll() {
+	ASTNode[] nodes;
+	while (p < src.length) {
+	    nodes ~= parseOne();
+	}
+	return nodes;
+    }
+
     ASTNode parseParen() {
         ASTNode[] nodes;
         while (p < src.length) {
@@ -85,8 +94,8 @@ class Parser
 }
 
 /// Parserにつっこんで parseするだけ
-ASTNode parse(Token[] src)
+ASTNode[] parse(Token[] src)
 {
     auto parser = new Parser(src);
-    return parser.parse();
+    return parser.parseAll();
 }

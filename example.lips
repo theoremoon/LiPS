@@ -1,0 +1,3 @@
+(print "HELLO This is LiPS Interpreter!!!")
+(print "I will calc 1+1!!!!")
+(print (+ 1 1))

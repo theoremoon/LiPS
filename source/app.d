@@ -1,11 +1,7 @@
 import Lexer, Parser, eval, ASTItems, builtinfuncs;
-import std.stdio;
+import std.stdio, std.file;
 
-
-/// Lips ソースコードを実行する
-void execute(string src) {
-	writeln("\n== EXECUTE ==");
-
+Env MakeEnv() {
 	// 環境をつくって
 	Env env;
 
@@ -25,24 +21,38 @@ void execute(string src) {
 	env["macro"] = new ASTBuiltin(&builtin_macro);
 	env["qquote"] = new ASTBuiltin(&builtin_qquote);
 
-	// 字句解析して構文解析して評価する
-	auto it = lex(src);
-	// writeln(it);
-	auto ast = parse(it);
-	eval.eval(ast, env);
+	return env;
 }
 
-void main()
+
+/// Lips ソースコードを実行する
+void execute(string src) {
+	auto env = MakeEnv();
+
+	// 字句解析して構文解析して評価する
+	auto it = lex(src);
+	auto asts = parse(it);
+	foreach (ast; asts) {
+	    eval.eval(ast, env);
+	}
+}
+
+void main(string[] args)
 {
-	
-
-	string[] srcs = [
-		"
-			(print `(A B ,(+ 1 2))
-		",
-	];
-
-	foreach (src; srcs) {
+	if (args.length > 1) {
+		string src = cast(string)read(args[1]);
 		execute(src);
+	}
+	else {
+		auto env = MakeEnv();
+		string line;
+		while ((line = readln) !is null) {
+			auto it = lex(line);
+			auto asts = parse(it);
+			foreach(ast; asts) {
+			    auto res = eval.eval(ast, env);
+			    write("=>"); builtin_print([res], env);
+			}
+		}
 	}
 }
