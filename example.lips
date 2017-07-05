@@ -1,1 +1,7 @@
 (do (def f (func (arg1) (+ 1 arg1))) (print (f 3)))
+(do 
+	(def unless (macro (cond t f)
+		`(if ,cond ,f ,t)))
+	(unless (print 1)
+		(print "F")
+		(print "T")))
